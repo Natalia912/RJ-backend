@@ -60,5 +60,5 @@ A FastAPI-based backend service for managing music compositions, users, and auth
    ```
 
 2. **Access the API**:
-   - API docs: http://localhost:8000/docs
-   - Alternative docs: http://localhost:8000/redoc
+   - API docs: http://127.0.0.1:8000
+   - Alternative docs: http://127.0.0.1:8000/docs
