@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.core.db_setup import create_db_and_tables
 from app.routers.user import router as user_router
 from app.routers.auth import router as auth_router
+from app.routers.composition import router as composition_router
 
 async def lifespan(app: FastAPI):
     create_db_and_tables()
@@ -10,8 +11,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-app.include_router(user_router)
 app.include_router(auth_router)
+app.include_router(composition_router)
+app.include_router(user_router)
 
 # @app.post("/test/")
 # def create_test(test: Test, session: SessionDep):

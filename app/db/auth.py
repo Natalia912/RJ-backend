@@ -24,7 +24,6 @@ async def get_current_active_user(token: Annotated[HTTPAuthorizationCredentials,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    print(token)
     payload = decode_access_token(token.credentials)
     print(payload)
     if payload is None:

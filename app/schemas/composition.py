@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -51,25 +52,57 @@ class Keys(str, Enum):
     Gm = 'Gm'
     Dm = 'Dm'
 
+class ChordBase(BaseModel):
+    chord: Keys
+    duration_numerator: Numerator
+    duration_denominator: Denominator
 
-class Composition (BaseModel):
-    id: int
-    name: str
-    created: str
-    edited: str
+class ChordCreate(ChordBase):
+    pass
 
-class Section (BaseModel):
-    id: int
+class ChordUpdate(ChordBase):
+    id: Optional[int] = None
+
+class SectionBase(BaseModel):
     name: str
     section_key: Keys
     signature_numerator: Numerator
     signature_denominator: Denominator
     repeat: int
-    composition_id: int
+    chords: list[ChordBase]
 
-class Chord (BaseModel):
+class SectionCreate(SectionBase):
+    pass
+
+class SectionUpdate(SectionBase):
+    id: Optional[int] = None
+    chords: list[ChordUpdate]
+
+class CompositionBase(BaseModel):
+    name: str
+    sections: list[SectionBase]
+
+class CompositionCreate(CompositionBase):
+    pass
+
+class Chord(ChordBase):
     id: int
-    chord: str
-    duration_numerator: Numerator
-    duration_denominator: Denominator
-    section_id: int
+
+class Section(SectionBase):
+    id: int
+    chords: list[Chord]
+
+class Composition(CompositionBase):
+    id: int
+    created: str
+    edited: str
+    sections: list[Section]
+
+class CompositionNew(CompositionCreate):
+    pass
+
+class CompositionUpdate(CompositionBase):
+    sections: list[SectionUpdate]
+    
+
+

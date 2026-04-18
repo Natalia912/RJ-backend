@@ -3,9 +3,9 @@ from typing_extensions import Annotated
 from fastapi import APIRouter, status, Depends, HTTPException
 from app.core.db_setup import SessionDep
 from app.schemas.common import CreateResponse
-from app.schemas.user import UserCreate, TokenData, UserResponse
-from app.models.user import User,UserPublic
-from app.core.auth import decode_access_token, get_password_hash, oauth2_scheme
+from app.schemas.user import UserCreate
+from app.models.user import User, UserPublic
+from app.core.auth import get_password_hash
 from sqlmodel import select
 from app.db.auth import get_current_active_user
 
