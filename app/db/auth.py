@@ -5,9 +5,21 @@ from typing_extensions import Annotated
 from sqlmodel import select
 from app.core.db_setup import SessionDep
 from app.models.user import User
-from app.core.auth import verify_password, decode_access_token, oauth2_scheme
+from app.core.auth import verify_password, decode_access_token, oauth2_scheme, get_password_hash
+from app.schemas.user import TokenData, UserCreate
 
-from app.schemas.user import TokenData
+
+def create_user(session: SessionDep, new_user: UserCreate) -> User:
+    if session.exec(select(User).where(User.email == new_user.email)).first():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+
+    hashed_password = get_password_hash(new_user.password)
+    user_to_update = new_user.model_copy(update={"hashed_password": hashed_password})
+    db_user = User.model_validate(user_to_update)
+    session.add(db_user)
+    session.commit()
+    session.refresh(db_user)
+    return db_user
 
 def authenticate_user(session: SessionDep, email: str, password: str):
     user = session.exec(select(User).where(User.email == email)).first()
